@@ -1,6 +1,5 @@
 """
-
-Hometask 14 lambda.
+Hometask 21 Bank card operation.
 
 # write class for bank card.
 # Class should reflect card lifecycle, card operations etc.
@@ -27,19 +26,20 @@ class BankCard:
         """Make init."""
         self.name = name
         self.surname = surname
-        self.balance = balance
-        self.card_num = self.card_number
-        self.exp_date = self.exp_date()
-        self.card_pin = self.card_pin()
-        self.card_cvv = self.card_cvv()
+        self._balance = balance
+        self.__card_num = self.get_card_number
+        self._exp_date = self.exp_date()
+        self._card_pin = self.card_pin()
+        self._card_cvv = self.card_cvv()
 
     @staticmethod
-    def card_number():
+    def get_card_number():
         """secret_card = f"{'*' * 12}{card[-4:]}."""
         """card = str(random.randint(1000000000000000, 9999999999999999))
         it's also works."""
-        card = str(random.randint(10 ** 15, (10 ** 16) - 1))
-        return f"{'*' * 12}{card[-4:]}"
+        """card = str(random.randint(10 ** 15, (10 ** 16) - 1))"""
+        """f"{'*' * 12}{card[-4:]}" """
+        return str(random.randint(10 ** 15, (10 ** 16) - 1))
 
     @staticmethod
     def exp_date():
@@ -52,12 +52,37 @@ class BankCard:
     @staticmethod
     def card_pin():
         """Make static method."""
-        return random.randint(0000, 9999)
+        card_pin = random.randint(1000, 9999)
+        return card_pin
 
     @staticmethod
     def card_cvv():
         """Find random cvv code."""
         return random.randint(100, 999)
+
+    def get_card_cvv(self):
+        """Getter."""
+        return self._card_cvv
+
+    def set_card_cvv(self, value):
+        """Setter."""
+        self._card_cvv = value
+
+    def get_card_pin(self):
+        """Getter."""
+        return self._card_pin
+
+    def set_card_pin(self, value):
+        """Setter."""
+        self._card_pin = value
+
+    def get_exp_date(self):
+        """Getter."""
+        return self._exp_date
+
+    def set_exp_date(self, value):
+        """Setter."""
+        self._exp_date = value
 
     @classmethod
     def get_account_info(cls):
@@ -69,41 +94,46 @@ class BankCard:
         """Card type."""
         return f"Card's type is {cls.card}"
 
-    @classmethod
-    def balance(cls):
-        """Show balance."""
-        return cls.balance
-
     def transfer_money(self, balance):
-        """Make transfer money from ATM."""
-        amount_transfer = float(input('Please enter transfer amount: '))
+        """Make transfer money."""
+        amount_transfer = 50
         new_balance = balance - amount_transfer
-        if self.balance < amount_transfer:
-            print("You don't have enough money")
+        if not 1000 <= self._card_pin <= 9999:
+            print('Wrong pin code')
         else:
-            print(new_balance)
-            return new_balance
+            if self._balance <= amount_transfer:
+                print("You don't have enough money")
+            else:
+                return new_balance
 
     def top_up(self, amount):
         """Make top up money with ATM."""
-        return self.balance + amount
+        return self._balance + amount
 
     @staticmethod
     def transfer_from_card1_to_card2(amount=250):
         """Make transfer money from card to card."""
-        bal_card1 = card1.balance - amount
-        bal_card2 = card2.balance + amount
+        bal_card1 = card1._balance - amount
+        bal_card2 = card2._balance + amount
         return bal_card1, bal_card2
 
     def __str__(self):
         """Make info about card."""
-        return f'About card for owner:\n'\
+        card_num = self.get_card_number()
+        hide_numbers = '*' * (len(card_num) - 4)
+        last_numbers = card_num[-4:]
+        return f'About card for owner:\n' \
                f'Card owner is {self.name} {self.surname}\n' \
-               f'Number Card is {self.card_number()}\n' \
-               f'Balance is {self.balance}\n' \
-               f'Expired date is {self.exp_date}\n' \
-               f'CVV is {self.card_cvv}\n' \
+               f'Number Card is {hide_numbers + last_numbers}\n' \
+               f'Balance is {self._balance}\n' \
+               f'Expired date is {self._exp_date}\n' \
+               f'CVV is {self._card_cvv}\n' \
 
+
+    @property
+    def balance(self):
+        """Balance."""
+        return self._balance
 
 
 if __name__ == '__main__':
