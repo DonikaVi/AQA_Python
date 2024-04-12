@@ -60,27 +60,33 @@ class BankCard:
         """Find random cvv code."""
         return random.randint(100, 999)
 
-    def get_card_cvv(self):
+    @property
+    def cvv(self):
         """Getter."""
         return self._card_cvv
 
-    def set_card_cvv(self, value):
+    @cvv.setter
+    def cvv(self, value):
         """Setter."""
         self._card_cvv = value
 
-    def get_card_pin(self):
+    @property
+    def pin(self):
         """Getter."""
         return self._card_pin
 
-    def set_card_pin(self, value):
+    @pin.setter
+    def pin(self, value):
         """Setter."""
         self._card_pin = value
 
-    def get_exp_date(self):
+    @property
+    def ex_date(self):
         """Getter."""
         return self._exp_date
 
-    def set_exp_date(self, value):
+    @ex_date.setter
+    def ex_date(self, value):
         """Setter."""
         self._exp_date = value
 
@@ -94,25 +100,31 @@ class BankCard:
         """Card type."""
         return f"Card's type is {cls.card}"
 
-    def transfer_money(self, balance):
+    @classmethod
+    def verification_pin(cls, card_pin, enter_pin):
+        """Check pin code."""
+        if card_pin != enter_pin:
+            raise ValueError('Incorrect PIN code')
+        else:
+            print('Entered PIN code is correct')
+
+    def transfer_money(self, balance, enter_pin, card_pin=1111):
         """Make transfer money."""
         amount_transfer = 50
         new_balance = balance - amount_transfer
-        if not 1000 <= self._card_pin <= 9999:
-            print('Wrong pin code')
+        self.verification_pin(card_pin, enter_pin)
+        if self._balance <= amount_transfer:
+            print("You don't have enough money")
         else:
-            if self._balance <= amount_transfer:
-                print("You don't have enough money")
-            else:
-                return new_balance
+            return new_balance
 
     def top_up(self, amount):
         """Make top up money with ATM."""
         return self._balance + amount
 
-    @staticmethod
-    def transfer_from_card1_to_card2(amount=250):
+    def transfer_from_card1_to_card2(self, amount, enter_pin, card_pin=1111):
         """Make transfer money from card to card."""
+        self.verification_pin(card_pin, enter_pin)
         bal_card1 = card1._balance - amount
         bal_card2 = card2._balance + amount
         return bal_card1, bal_card2
@@ -142,13 +154,13 @@ if __name__ == '__main__':
     print(card1)
     print(card2)
     print('------' * 10)
-    top_up_card = card1.top_up(amount=100)
+    top_up_card = card1.top_up(100)
     print(f'This card was top up for 100 '
           f'and the balance now is {top_up_card}$')
     print('------' * 10)
-    transfer_operation = card1.transfer_money(card1.balance)
+    transfer_operation = card1.transfer_money(card1.balance, enter_pin=1111)
     print(f' After transfer your account balance is {transfer_operation}$')
     print('------' * 10)
-    trans = card1.transfer_from_card1_to_card2()
+    trans = card1.transfer_from_card1_to_card2(250, enter_pin=1111)
     print(f'After transfer money from card1 to card2 '
           f'the the rest of money on this cards is {trans}')
