@@ -21,7 +21,7 @@ on the left ('NTRS' = 4 letters) )
 # [A-Z]  - match any capital letter
 # [^A-Z] - match any character except capital letter
 # [a-z]  - match small letter
-# do not forget about possible PRE- and POST-regexp searches
+# do not forget about possible PRE and POST regexp searches
 
 """
 
